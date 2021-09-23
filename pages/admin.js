@@ -47,27 +47,27 @@ export default function admin({manufacturers}) {
     }
 
 
-   function giveAuthorization() {
-       return Authorized
-   }
+//    function giveAuthorization() {
+//        return Authorized
+//    }
 
-    if(giveAuthorization()){
-        // console
+//     if(giveAuthorization()){
+//         // console
         return (
         
         <Layout>
                 <Card.Group items={items} />
             </Layout>
         )
-    }
-    // else
-    // {
-        useEffect(()=>{
-            router.push('/');
-        },[]);
-        return (
-            <div></div>
-        )
+    // }
+    // // else
+    // // {
+    //     useEffect(()=>{
+    //         router.push('/');
+    //     },[]);
+    //     return (
+    //         <div></div>
+    //     )
     // }
       
 }

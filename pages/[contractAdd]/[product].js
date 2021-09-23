@@ -12,6 +12,7 @@ export default function product({productsList}) {
     const router = useRouter();
 
     let items = [];
+    console.log(router.query)
 
     for(let i=0;i<productsList.length;i++){
         items.push({
@@ -44,7 +45,7 @@ export default function product({productsList}) {
                     </Grid.Column>
                     <Grid.Column width = {3}>
                         <Button primary onClick = {()=>{
-                            router.push(`/${router.query.contractAdd}/addProduct`)
+                            router.push(`/${router.query.contractAdd}/${router.query.product}/addProduct`)
                         }}>Add Products!!</Button>
                     </Grid.Column>
                 </Grid.Row>
