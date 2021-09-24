@@ -1,5 +1,4 @@
 import React ,  { useState, useEffect } from 'react'
-import Layout from '../components/Layout';
 import { Card, Container } from 'semantic-ui-react';
 import Admin from '../ethereum/admin';
 import Manufacturer from '../ethereum/manufacturer';
@@ -9,6 +8,7 @@ import { Redirect } from 'react-router';
 import { Router } from 'react-router';
 import { Button } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
+import LayoutAdmin from '../components/AdminLayout/LayoutAdmin';
 
 export default function admin({manufacturers}) {
 
@@ -47,9 +47,9 @@ export default function admin({manufacturers}) {
     
     if(Authorized){
         return (
-        <Layout>
+        <LayoutAdmin>
             <Card.Group items={items} />
-        </Layout>
+        </LayoutAdmin>
         )
     }
     else

@@ -130,7 +130,6 @@ export default function index({manufacturers}) {
             setSelected('admin');
             router.push('/admin');
             
-            console.log(items);
         }
         else{
             setInterval(() => {
@@ -156,7 +155,6 @@ export default function index({manufacturers}) {
             router.push('/new');
         }
     }
-    console.log(logo)   
   return (
     <div className={styles.container}>
         <HeadTag/>
