@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React , {useState , useEffect} from 'react'
 import Layout from '../../../components/Layout'
 import { Form , Button , Input } from 'semantic-ui-react'
 import Message from '../../../components/Message'
@@ -6,6 +6,7 @@ import web3 from '../../../ethereum/web3'
 import Manufacturer from '../../../ethereum/manufacturer'
 import { useRouter } from 'next/router'
 import assert from 'assert'
+import Admin from '../../../ethereum/admin'
 
 export default function AddProduct() {
     const router = useRouter()
@@ -19,6 +20,22 @@ export default function AddProduct() {
 
     const onSubmit = async()=>{
         setLoading(true)
+
+        
+        
+        if(!Authorized){
+            setInterval(() => {
+                setMess(null)
+            }, 2000);
+
+            setMess({
+                type:'failure',
+                header : 'Error',
+                content : 'You are not a manufacturer'
+            })
+            setLoading(false);
+            return
+        }
 
         try {
             assert(proName != '' && proPrice != '' && proFeature != '')
@@ -43,6 +60,27 @@ export default function AddProduct() {
         }
 
         
+    }
+
+
+
+    
+    
+    const [validated, setValidated] = useState('Not Set');
+    const [Authorized , setAuthorized] = useState(false);
+
+    useEffect(()=>{
+        if(validated === 'Not Set') 
+            getValidation();
+    },[]);
+
+    const getValidation = async()=>{
+        let accounts = await web3.eth.getAccounts()
+
+        let getContractId = await Admin.methods.getContractId(accounts[0]).call()
+
+        if( getContractId == router.query.contractAdd)   setAuthorized(true);
+        setValidated('Set');
     }
 
     return (

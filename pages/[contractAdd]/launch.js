@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useState , useEffect } from 'react'
 import { Button, Checkbox, Form } from 'semantic-ui-react'
 import Layout from '../../components/Layout'
 import Message from '../../components/Message'
@@ -26,6 +26,21 @@ export default function launch() {
     const handleSubmit = async(event)=>{
         event.preventDefault();
         setLoading(true);
+
+        
+        if(!Authorized){
+            setInterval(() => {
+                setMess(null)
+            }, 2000);
+
+            setMess({
+                type:'failure',
+                header : 'Error',
+                content : 'You are not a manufacturer'
+            })
+            setLoading(false);
+            return
+        }
 
         try {
             assert(product != '')
@@ -55,8 +70,27 @@ export default function launch() {
                 content : error.message
             })
         }
+    }
 
-        
+
+
+
+    
+    const [validated, setValidated] = useState('Not Set');
+    const [Authorized , setAuthorized] = useState(false);
+
+    useEffect(()=>{
+        if(validated === 'Not Set') 
+            getValidation();
+    },[]);
+
+    const getValidation = async()=>{
+        let accounts = await web3.eth.getAccounts()
+
+        let getContractId = await Admin.methods.getContractId(accounts[0]).call()
+
+        if( getContractId == router.query.contractAdd)   setAuthorized(true);
+        setValidated('Set');
     }
 
     return (

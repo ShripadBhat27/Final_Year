@@ -1,12 +1,12 @@
-import React from 'react'
-import Layout from '../components/Layout'
-import { Button, Form } from 'semantic-ui-react'
+import React , {useState , useEffect} from 'react'
+import { Button, Form , Container } from 'semantic-ui-react'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
 import Message from '../components/Message'
 import web3 from '../ethereum/web3'
 import Admin from '../ethereum/admin'
 import assert from 'assert'
+import Manufacturer from '../ethereum/manufacturer'
+import LayoutNew from '../components/LayoutNew'
 
 
 export default function New() {
@@ -54,27 +54,59 @@ export default function New() {
                 content : error.message
             })
             setLoading(false);
-        }
-            
+        }   
     }
-    return (
-        <Layout>
-            <Message Mess = {Mess} />
-            <Form onSubmit = {onSubmit}>
-                <Form.Field>
-                    <label>Enter Company Name</label>
-                    <input value = {cname} onChange = {handleChangeName}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>Enter Tag Line</label>
-                    <input value = {ctag} onChange = {handleChangeTag} />
-                </Form.Field>
-                <Form.Field>
-                    <label>Enter Product Name</label>
-                    <input value = {cproduct} onChange = {handleChangeProduct} />
-                </Form.Field>
-                <Button loading = {loading} type='submit' primary>Sign Up!</Button>
-            </Form>
-        </Layout>
-    )
+
+
+
+    
+    const [validated, setValidated] = useState('Not Set');
+    const [Authorized , setAuthorized] = useState(false);
+
+    useEffect(()=>{
+        if(validated === 'Not Set') 
+            getValidation();
+    },[]);
+
+    const getValidation = async()=>{
+        let accounts = await web3.eth.getAccounts()
+
+        let getContractId = await Admin.methods.getContractId(accounts[0]).call()
+
+        if( getContractId == '0x0000000000000000000000000000000000000000')   setAuthorized(true);
+        setValidated('Set');
+    }
+    if(Authorized){
+        return (
+            <LayoutNew >
+                <div style = {{marginTop : '50px'}}>
+                    <Message Mess = {Mess} />
+                        <h3>Enter Details to Register</h3>
+                    <Form onSubmit = {onSubmit}>
+                        <Form.Field>
+                            <label>Enter Company Name</label>
+                            <input value = {cname} onChange = {handleChangeName}/>
+                        </Form.Field>
+                        <Form.Field>
+                            <label>Enter Tag Line</label>
+                            <input value = {ctag} onChange = {handleChangeTag} />
+                        </Form.Field>
+                        <Form.Field>
+                            <label>Enter Product Name</label>
+                            <input value = {cproduct} onChange = {handleChangeProduct} />
+                        </Form.Field>
+                        <Button loading = {loading} type='submit' primary>Sign Up!</Button>
+                    </Form>
+                </div>
+                
+            </LayoutNew>
+        )
+    }
+    else{
+        return (
+            <Container className = 'container'><h3 style = {{marginTop:'14px', marginBottom : '0px'}}>Aleady You are a manufacturer. Click here to go back</h3><br/>
+                <Button onClick = {()=>{router.replace('/')}}  primary  size='small'>Click Here!</Button>
+            </Container>
+        )
+    }
 }
