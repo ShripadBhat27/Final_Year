@@ -38,7 +38,7 @@ export default function edit() {
         setLoading(true)
 
         if(!Authorized){
-            setInterval(() => {
+            setTimeout(() => {
                 setMess(null)
             }, 2000);
 
@@ -60,7 +60,7 @@ export default function edit() {
         } catch (error) {
             console.log(error);
 
-            setInterval(() => {
+            setTimeout(() => {
                 setMess(null)
             }, 2000);
 

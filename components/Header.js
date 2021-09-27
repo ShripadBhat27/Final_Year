@@ -42,7 +42,7 @@ export default function Header() {
       router.replace(`/`);
   }
   
-    console.log(logo)
+
       return (
         <Menu  stackable style = {{marginTop : '14px'}}>
           <Menu.Item

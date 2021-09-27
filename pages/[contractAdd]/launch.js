@@ -29,7 +29,7 @@ export default function launch() {
 
         
         if(!Authorized){
-            setInterval(() => {
+            setTimeout(() => {
                 setMess(null)
             }, 2000);
 
@@ -60,7 +60,7 @@ export default function launch() {
         } catch (error) {
             setLoading(false);
 
-            setInterval(() => {
+            setTimeout(() => {
                 setMess(null);
             }, 2000);
 

@@ -44,7 +44,7 @@ export default function New() {
         } catch (error) {
             console.log(error);
 
-            setInterval(() => {
+            setTimeout(() => {
                 setMess(null)
             }, 2000);
 

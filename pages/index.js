@@ -18,7 +18,7 @@
 //             console.log(items);
 //         }
 //         else{
-//             setInterval(() => {
+//             setTimeout(() => {
 //                 setMess(null)
 //             }, 2000);
 //             setMess({
@@ -132,9 +132,11 @@ export default function index({manufacturers}) {
             
         }
         else{
-            setInterval(() => {
+            setTimeout(() => {
                 setMess(null)
             }, 2000);
+
+
             setMess({
                 type : 'negative',
                 header : 'Error',
