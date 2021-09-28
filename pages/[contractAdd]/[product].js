@@ -6,23 +6,46 @@ import Manufacturer from '../../ethereum/manufacturer';
 import { route } from 'next/dist/server/router';
 import Admin from '../../ethereum/admin'
 import web3 from '../../ethereum/web3';
+import QRCode from 'qrcode.react';
 
 
 
 
 export default function product({productsList}) {
     const router = useRouter();
+    console.log(productsList);
+    const downloadQRCode = () => {
+    const qrCodeURL = document.getElementById('qrCodeEl')
+      .toDataURL("image/png")
+      .replace("image/png", "image/octet-stream");
+    console.log(qrCodeURL)
+    let aEl = document.createElement("a");
+    aEl.href = qrCodeURL;
+    aEl.download = "QR_Code.png";
+    document.body.appendChild(aEl);
+    aEl.click();
+    document.body.removeChild(aEl);
+  }
 
     let items = [];
     console.log(router.query)
 
     for(let i=0;i<productsList.length;i++){
+        let url=`http://localhost:3000/${router.query.contractAdd}/${router.query.product}/${i}`
+        let features=productsList[i].feature.split(';');
         items.push({
-            header : productsList[i].feature,
-            meta : <div>{productsList[i].price} Rs</div> ,
+            header : features[0],
+            meta : <div>Price: {productsList[i].price} Rs</div> ,
             description :   <div>
                                 <strong>Retailer : </strong> {productsList[i].retailer}<br/>
-                                <strong>Customer : </strong> {productsList[i].customer}
+                                <strong>Customer : </strong> {productsList[i].customer}<br/>
+                                <QRCode
+                                    id="qrCodeEl"
+                                    size={150}
+                                    value={url}
+                                  /><br/>
+                                  <Button content='Download' onClick={downloadQRCode} primary/>
+
                                 <div style = {{marginTop : '15px'}} >
                                     <Button color={productsList[i].sold ? 'green':'red'}>
                                         {productsList[i].sold ? 'Sold' :  'Not Sold Yet'}
