@@ -4,25 +4,41 @@ import logo from '../public/apple-icon-180x180.png';
 import { Button, Card,Segment } from 'semantic-ui-react';
 import { route } from 'next/dist/server/router';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
+
 
 export default function customer(){
 	const router = useRouter();
-	useEffect(() => {
-		  const script = document.createElement('script');
+	const [result,setresult]=useState('');
+	const QrReader = dynamic(() => import('react-qr-reader'), {
+		ssr: false
+		})
+	const qrRef = useRef(null);
 
-		  script.src = "./qrReader.js";
-		  script.async = true;
+	// const handleErrorFile = (error) => {
+	//     console.log("err=="+error);
+	//   }
+	//  const handleScanFile = (res) => {
+	//  	 setresult(res);
 
-		  document.body.appendChild(script);
+ // 	}
 
-		  return () => {
-		    document.body.removeChild(script);
-		  }
+  // const onScanFile = () => {
+  //   qrRef.current.click();
+  // }
 
-
-
-	}, []);  
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+	 const handleErrorWebCam = (error) => {
+    console.log("err=="+error);
+  }
+  const handleScanWebCam = (res) => {
+  	setresult(res);
+  	//console.log(res)
+  	if(res)
+    {	
+    	window.location.href=res;
+    }
+   }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
 
 	return(
 		<div>
@@ -32,9 +48,16 @@ export default function customer(){
 					<h4 style={{color:'black',fontSize:'25px'}}>
 				         Upload your Qr Code
 				    </h4>
-					<input type="file" id="file" name="file"/><br/>
-					<span id="content"></span>
 				</div>
+
+				 <QrReader
+                         delay={400}
+                         style={{width: '30%',height:'30%'}}
+                         onError={handleErrorWebCam}
+                         onScan={handleScanWebCam}
+                     />
+                    <h5>{result}</h5>
+				
 			  </main>
 		    
 	    </div>
