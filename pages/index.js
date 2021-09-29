@@ -157,6 +157,11 @@ export default function index({manufacturers}) {
             router.push('/new');
         }
     }
+
+    const handleCustClick=()=>{
+        router.push('/customer');
+    }
+
   return (
     <div className={styles.container}>
         <HeadTag/>
@@ -174,8 +179,8 @@ export default function index({manufacturers}) {
             <Segment className={styles.grid} style = {{background : 'black'}}>
                 <Button style = {{margin : '5px'}} content="Admin" onClick = {handleAdminClick} primary  className={styles.card}/>
                 <Button style = {{margin : '5px'}} content="Manufacturer" onClick = {handleManClick} primary  className={styles.card} />
-                <Button style = {{margin : '5px'}} content="Retailer" primary className={styles.card}/>
-                <Button style = {{margin : '5px'}} content="Customer" primary className={styles.card}/>
+                <Button style = {{margin : '5px'}} content="Retailer"  primary className={styles.card}/>
+                <Button style = {{margin : '5px'}} content="Customer" onClick = {handleCustClick} primary className={styles.card}/>
             </Segment>
         </main>
     </div>
