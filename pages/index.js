@@ -87,6 +87,7 @@ import styles from '../styles/Home.module.css'
 
 import logo from '../public/apple-icon-180x180.png'
 
+
 function HeadTag()
 {
     return(
@@ -119,6 +120,8 @@ export default function index({manufacturers}) {
     let items = [];
     const [selected, setSelected] = useState('');
     const [Mess, setMess] = useState(null);
+
+    // console.log(Note)
 
     const handleAdminClick = async()=>{
         let accounts = await web3.eth.getAccounts();
