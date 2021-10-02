@@ -7,6 +7,7 @@ import Admin from '../ethereum/admin'
 import assert from 'assert'
 import Manufacturer from '../ethereum/manufacturer'
 import LayoutNew from '../components/LayoutNew'
+import LayoutAdmin from '../components/AdminLayout/LayoutAdmin'
 
 
 export default function New() {
@@ -78,7 +79,7 @@ export default function New() {
     }
     if(Authorized){
         return (
-            <LayoutNew >
+            <LayoutAdmin >
                 <div style = {{marginTop : '50px'}}>
                     <Message Mess = {Mess} />
                         <h3>Enter Details to Register</h3>
@@ -99,7 +100,7 @@ export default function New() {
                     </Form>
                 </div>
                 
-            </LayoutNew>
+            </LayoutAdmin>
         )
     }
     else{

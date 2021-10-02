@@ -93,5 +93,6 @@ contract Admin{
     function countProductsAddedInLaunch(uint product) view public returns (uint){
         return listingProducts[product].length;
     }
+    // manupilate prices , set as sold
  }
   
