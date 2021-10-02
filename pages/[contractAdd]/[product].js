@@ -12,13 +12,18 @@ import QRCode from 'qrcode.react';
 
 
 export default function product({productsList}) {
+    
+    
     const router = useRouter();
     console.log(productsList);
-    const downloadQRCode = () => {
-    const qrCodeURL = document.getElementById('qrCodeEl')
+
+    const downloadQRCode = (i) => {
+        console.log(i);
+        const as=document.querySelectorAll("#qrcodeEl")[i];
+    const qrCodeURL =as
       .toDataURL("image/png")
       .replace("image/png", "image/octet-stream");
-    console.log(qrCodeURL)
+    console.log("qrcode=="+qrCodeURL)
     let aEl = document.createElement("a");
     aEl.href = qrCodeURL;
     aEl.download = "QR_Code.png";
@@ -40,11 +45,11 @@ export default function product({productsList}) {
                                 <strong>Retailer : </strong> {productsList[i].retailer}<br/>
                                 <strong>Customer : </strong> {productsList[i].customer}<br/>
                                 <QRCode
-                                    id="qrCodeEl"
+                                    id="qrcodeEl"
                                     size={150}
                                     value={url}
                                   /><br/>
-                                  <Button content='Download' onClick={downloadQRCode} primary/>
+                                  <Button content='Download' onClick={()=>downloadQRCode(i)} primary/>
 
                                 <div style = {{marginTop : '15px'}} >
                                     <Button color={productsList[i].sold ? 'green':'red'}>

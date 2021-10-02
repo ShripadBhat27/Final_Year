@@ -94,7 +94,7 @@ export default function AddedProduct({productsList}) {
 				    </h4><br/>
 				    <div className={styles.title} style={{color:'black',fontSize:'24px'}}>
 					    {features.map((ft) => (
-					        <li>{ft}</li>
+					        <li key={ft}>{ft}</li>
 					      ))}
 				     </div><br/>
 				    
