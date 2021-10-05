@@ -1,11 +1,12 @@
 import React ,  { useState, useEffect ,useRef } from 'react';
 import styles from '../styles/Home.module.css';
 import logo from '../public/apple-icon-180x180.png';
-import { Button, Card,Segment } from 'semantic-ui-react';
+import { Button, Card,Input,Segment ,Container} from 'semantic-ui-react';
 import { route } from 'next/dist/server/router';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import QrcodeDecoder from 'qrcode-decoder';
+import LayoutAdmin from '../components/AdminLayout/LayoutAdmin';
 
 
 export default function customer(){
@@ -63,34 +64,36 @@ export default function customer(){
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
 
 	return(
-		<div>
-			<main className={styles.main}>
-				<img height = '150px' width = '150px' style = {{marginTop : '15px'}} src = {logo.src} />
-				<div className={styles.card}>
-					<h4 style={{color:'black',fontSize:'25px'}}>
-				         Upload your Qr Code
-				    </h4>
-					  
-				  	<input
-		              id="file"
-		              type="file"
-		              accept="image/*"
-		              onChange={handleFileChange}
-		            />
-				</div><br/>
-				<div className={styles.title} style={{color:'black',fontSize:'35px'}}>
-					Scan Your QRcode
-				</div><br/>
-				 <QrReader
-                         delay={400}
-                         style={{width: '30%',height:'30%'}}
-                         onError={handleErrorWebCam}
-                         onScan={handleScanWebCam}
-                     />
-                    <h5>{result}</h5>
+		<LayoutAdmin>
+			<Container>
+				<main className={styles.main} style = {{paddingTop : '0px'}}>
+					<div className={styles.card}>
+						<h4 style={{color:'black',fontSize:'25px'}}>
+							Upload your Qr Code
+						</h4>
+						
+						<Input
+							id="file"
+							type="file"
+							accept="image/*"
+							onChange={handleFileChange}
+						/>
+					</div><br/>
+					<div className={styles.title} style={{color:'black',fontSize:'35px'}}>
+						Scan Your QRcode
+					</div><br/>
+					<QrReader
+							delay={400}
+							style={{width: '30%',height:'30%'}}
+							onError={handleErrorWebCam}
+							onScan={handleScanWebCam}
+						/>
+						<h5>{result}</h5>
+					
+				</main>
 				
-			  </main>
-		    
-	    </div>
-	)
+			</Container>
+	
+		</LayoutAdmin>
+		)
 }

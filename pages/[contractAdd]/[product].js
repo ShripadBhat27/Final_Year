@@ -30,13 +30,16 @@ export default function product({productsList}) {
     document.body.appendChild(aEl);
     aEl.click();
     document.body.removeChild(aEl);
-  }
+    }
 
     let items = [];
     console.log(router.query)
 
+    
     for(let i=0;i<productsList.length;i++){
         let url=`http://localhost:3000/${router.query.contractAdd}/${router.query.product}/${i}`
+        console.log(url)
+
         let features=productsList[i].feature.split(';');
         items.push({
             header : features[0],
@@ -50,6 +53,7 @@ export default function product({productsList}) {
                                     value={url}
                                   /><br/>
                                   <Button content='Download' onClick={()=>downloadQRCode(i)} primary/>
+                        
 
                                 <div style = {{marginTop : '15px'}} >
                                     <Button color={productsList[i].sold ? 'green':'red'}>
@@ -63,7 +67,8 @@ export default function product({productsList}) {
             style : { overflowWrap : 'break-word' }
         });
     }
-
+ 
+    
 
     
     const [validated, setValidated] = useState('Not Set');
@@ -125,7 +130,6 @@ product.getInitialProps = async(ctx)=>{
         })
     )
     return ({productsList});
-
 }
 
 

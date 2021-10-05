@@ -3,7 +3,7 @@ const Web3=require('web3');
 const compiledAdmin =require('./build/Admin.json');
 
 const provider=new HDWalletProvider(
-	'strategy hover solve census amazing lucky ride asset grit rabbit world foam',
+	'topic soldier position ball satoshi letter impulse seat that cliff prosper raccoon',
     'https://ropsten.infura.io/v3/a5e7731293dd4ac69f778244c2b0a543'
 );
 

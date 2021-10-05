@@ -93,5 +93,10 @@ contract Admin{
     function countProductsAddedInLaunch(uint product) view public returns (uint){
         return listingProducts[product].length;
     }
+    
+    function updateProductSell(uint productNo,uint pr) public{
+        Product[] storage productlist=listingProducts[productNo];
+        productlist[pr].sold=true;
+    }
  }
   

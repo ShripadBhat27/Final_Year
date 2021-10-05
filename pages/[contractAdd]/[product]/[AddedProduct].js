@@ -6,20 +6,22 @@ import styles from '../../../styles/Home.module.css';
 import logo from '../../../public/apple-icon-180x180.png';
 import web3 from '../../../ethereum/web3';
 import Manufacturer from '../../../ethereum/manufacturer';
-import { Button, Card,Segment } from 'semantic-ui-react';
+import { Button, Card,Segment , List, Container, Icon } from 'semantic-ui-react';
+import LayoutAdmin from '../../../components/AdminLayout/LayoutAdmin'
 
 
 
-export default function AddedProduct({productsList}) {
+export default function AddedProduct({productsList , manInfo}) {
 	const router = useRouter();
-	console.log("router: "+JSON.stringify(router.query))
-	console.log(productsList)
+	// console.log("router: "+JSON.stringify(router.query))
+	// console.log(productsList)
+	// console.log(manInfo)
 	let i=router.query.AddedProduct;
-	console.log("i: "+i);
+	// console.log("i: "+i);
 	const features=productsList[i][0].split(';');
 	var name=features.shift();
 	const amt=productsList[i][1];
-	console.log(features)
+	// console.log(features)
 
 
 	//razorpay functions
@@ -81,33 +83,49 @@ export default function AddedProduct({productsList}) {
 		});
 
 	}
+	let items = []
+
+
+	for(let i=0;i<features.length-1;i++)
+	{
+		items.push({
+			header : <div> <b><Icon name="angle double right"/>  {features[i]} </b> </div>
+		})
+	}
+
     return (
-        <div>
-            <main className={styles.main}>
-				<img height = '150px' width = '150px' style = {{marginTop : '15px'}} src = {logo.src} />
-				<div className={styles.cardpay}>
-					<br/><h4 className={styles.title} style={{color:'black',fontSize:'30px'}}>
-				         {name} 
-				    </h4><br/>
-					<br/><h4 className={styles.title} style={{color:'black',fontSize:'20px'}}>
-				         Features: 
-				    </h4><br/>
-				    <div className={styles.title} style={{color:'black',fontSize:'24px'}}>
-					    {features.map((ft) => (
-					        <li key={ft}>{ft}</li>
-					      ))}
-				     </div><br/>
-				    
-				    <h4 className={styles.title} style={{color:'black',fontSize:'30px'}}>
-				         Price  :  {productsList[i][1]} Rs
-				    </h4>
-				    <br/>
-				    <Button className={styles.payBtn} disabled={productsList[i][2]} onClick={() =>displayRazorpay()}primary size="massive">
-				    	pay
-				    </Button>
-			    </div>
-			   </main>
-        </div>
+		<LayoutAdmin>
+
+			<Container >
+				<main className={styles.main} style = {{ marginLeft : '25%' , marginRight : '25%' ,paddingTop : '0px' }}>
+					<img height = '150px' width = '150px' style = {{marginTop : '15px'}} src = {logo.src} />
+						<Card style = {{ "width" : "100%"}} >
+							<Card.Content style = {{"wordWrap" : "break-word" }}>
+								<Card.Header>
+									{name}
+								</Card.Header>
+								<Card.Meta>
+									<span >{manInfo.name}</span>
+								</Card.Meta>
+									<Card.Description >
+										<p>
+											Manufacturer Address :{ manInfo.companyAddress}
+										</p>
+
+										<List animated verticalAlign='middle' items={items} />
+									</Card.Description>
+								</Card.Content>
+							<Card.Content extra>
+							<a>
+							<Button className={styles.payBtn} disabled={productsList[i][2]} onClick={() =>displayRazorpay()} primary>
+								Pay
+							</Button>
+							</a>
+							</Card.Content>
+						</Card>
+				</main>
+			</Container>
+		</LayoutAdmin>
     )
 }
 
@@ -122,6 +140,8 @@ AddedProduct.getInitialProps = async(ctx)=>{
             return curMan.methods.listingProducts(ctx.query.product,index).call()
         })
     )
-    return ({productsList});
+
+	let manInfo = await curMan.methods.thisCampany().call();
+    return ({productsList , manInfo});
 
 }

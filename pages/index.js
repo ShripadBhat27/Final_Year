@@ -83,9 +83,11 @@ import { route } from 'next/dist/server/router';
 import Image from 'next/image';
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
+import { connectToDatabase } from '../lib/mongodb';
 
 
 import logo from '../public/apple-icon-180x180.png'
+
 
 function HeadTag()
 {
@@ -114,13 +116,24 @@ function HeadTag()
 }
 
 
-export default function index({manufacturers}) {
+export default function index({manufacturers , retailersList}) {
     const router = useRouter();
     let items = [];
     const [selected, setSelected] = useState('');
     const [Mess, setMess] = useState(null);
 
+    // console.log(Note)
+
     const handleAdminClick = async()=>{
+
+
+        // const { db } = await connectToDatabase()
+        // console.log(accounts[0])
+        // const data = await db.collection('notes').find({title : 'This is tile'}).toArray();
+        // const retailersList = JSON.parse(JSON.stringify(data))
+
+
+
         let accounts = await web3.eth.getAccounts();
         let superHost = await Admin.methods.superHost().call();
         if(accounts[0] === superHost){
@@ -162,6 +175,24 @@ export default function index({manufacturers}) {
         router.push('/customer');
     }
 
+    const handleRetClick = async()=>{
+         let accounts  = []
+        accounts = await web3.eth.getAccounts()
+
+        await fetch(`http://localhost:3000/api/properties?metamaskId=${accounts[0]}`)
+        .then((response)=>{
+                response.json().then((data)=>{
+                // console.log(data)
+
+                if(data.length >= 1 )
+                    router.push(`/retailer/${accounts[0]}`)
+                else
+                    router.push(`/retailer/newRetailer`)
+            })
+        })
+    }
+
+
   return (
     <div className={styles.container}>
         <HeadTag/>
@@ -179,7 +210,7 @@ export default function index({manufacturers}) {
             <Segment className={styles.grid} style = {{background : 'black'}}>
                 <Button style = {{margin : '5px'}} content="Admin" onClick = {handleAdminClick} primary  className={styles.card}/>
                 <Button style = {{margin : '5px'}} content="Manufacturer" onClick = {handleManClick} primary  className={styles.card} />
-                <Button style = {{margin : '5px'}} content="Retailer"  primary className={styles.card}/>
+                <Button style = {{margin : '5px'}} content="Retailer" onClick = {handleRetClick}  primary className={styles.card}/>
                 <Button style = {{margin : '5px'}} content="Customer" onClick = {handleCustClick} primary className={styles.card}/>
             </Segment>
         </main>
@@ -191,7 +222,7 @@ export default function index({manufacturers}) {
 
 
 
-index.getInitialProps = async (ctx)=>{
+export async function getServerSideProps(ctx){
   
     let listOfManufacturers = await Admin.methods.getListOfManufacturers().call();
     let manufacturers = [];
@@ -209,5 +240,25 @@ index.getInitialProps = async (ctx)=>{
 
         });
     }
-    return {manufacturers};
+
+
+    // db connectivity
+
+    let accounts  = []
+    accounts = await web3.eth.getAccounts()
+        
+    setTimeout(() => {
+        console.log(accounts[0])
+    }, 2000);
+
+    const { db } = await connectToDatabase()
+    const data = await db.collection('notes').find({title : 'This is tile'}).toArray();
+    const retailersList = JSON.parse(JSON.stringify(data))
+
+    return {
+        props : {
+            retailersList : retailersList,
+            manufacturers : manufacturers
+        }
+      }
 }
