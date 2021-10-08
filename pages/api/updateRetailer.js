@@ -11,7 +11,6 @@ export default async function handler(req,res){
     const retailer = await db.collection('notes').find({metamaskId : metamaskId}).toArray();
 
     let update = {
-        _id : retailer._id,
         name : data.name,
         address : data.address,
         mobile : data.mobile,
