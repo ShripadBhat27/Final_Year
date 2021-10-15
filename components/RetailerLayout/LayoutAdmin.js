@@ -28,6 +28,7 @@ export default function LayoutRetailer(props) {
                 <meta name="msapplication-TileColor" content="#ffffff"/>
                 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png"/>
                 <meta name="theme-color" content="#ffffff"/>
+                 <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
             </Head>
             <HeaderRetailer/>
             {props.children}

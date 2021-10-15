@@ -52,7 +52,7 @@ contract Admin{
         string feature;
         uint price;
         bool sold;
-        address retailer;
+        string retailer;
         address customer;
     }
     
@@ -76,7 +76,7 @@ contract Admin{
     }
     function addProduct(uint product,uint price ,string cfeature) restricted public{
         Product memory newProduct = Product(cfeature,price , false ,
-        0x0000000000000000000000000000000000000000,
+        '0x0000000000000000000000000000000000000000',
         0x0000000000000000000000000000000000000000);
         listingProducts[product].push(newProduct);
     }
@@ -94,9 +94,11 @@ contract Admin{
         return listingProducts[product].length;
     }
     
-    function updateProductSell(uint productNo,uint pr) public{
+    function updateProductSell(uint productNo,uint pr,string ret,address cust) public{
         Product[] storage productlist=listingProducts[productNo];
         productlist[pr].sold=true;
+        productlist[pr].retailer=ret;
+        productlist[pr].customer=cust;
     }
  }
   

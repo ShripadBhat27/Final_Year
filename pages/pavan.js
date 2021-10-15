@@ -1,18 +1,18 @@
-const Mongoose = require('mongoose')
+// const Mongoose = require('mongoose')
 
 
-Mongoose.connect('mongodb://localhost:27017/Note' ,{ useNewUrlParser: true } )
+// Mongoose.connect('mongodb://localhost:27017/Note' ,{ useNewUrlParser: true } )
 
-const NoteSchema = new Mongoose.Schema({
-    name : {
-        type : String
-    },
-    description : {
-        type : String
-    }
-})
+// const NoteSchema = new Mongoose.Schema({
+//     name : {
+//         type : String
+//     },
+//     description : {
+//         type : String
+//     }
+// })
 
-const Note = Mongoose.model('Note' , NoteSchema)
+// const Note = Mongoose.model('Note' , NoteSchema)
 
 // // Creation of database(if not exits) and connecting it
 // mongoose.connect('mongodb://localhost:27017/fruitsDB',{ useNewUrlParser: true });
@@ -37,19 +37,30 @@ const Note = Mongoose.model('Note' , NoteSchema)
 
 
 
-import React , {useEffect} from 'react'
-import link from 'next/link'
-import { useRouter } from 'next/router'
+// import React , {useEffect} from 'react'
+// import link from 'next/link'
+// import { useRouter } from 'next/router'
 
-// import Note from '../models/Note';
+// // import Note from '../models/Note';
 
-export default function pavan() {
-    const router =   useRouter();
-    console.log(Note)
-    return (
-        <div>
-            Pavan
-        </div>
-    )
+// export default function pavan() {
+//     const router =   useRouter();
+//     console.log(Note)
+//     return (
+//         <div>
+//             Pavan
+//         </div>
+//     )
     
-}
+// }
+
+const CryptoJS=require("crypto-js");
+
+// Encrypt
+var ciphertext = CryptoJS.AES.encrypt('rzp_test_av6t1hoxffSiUW', '7798003210').toString();
+
+console.log(ciphertext);
+var bytes  = CryptoJS.AES.decrypt(ciphertext,'7798003210');
+var originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+console.log(originalText);

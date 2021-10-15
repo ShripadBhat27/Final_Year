@@ -5,6 +5,8 @@ import { Form , Button } from 'semantic-ui-react'
 import { useRouter } from 'next/router'
 import web3 from '../../ethereum/web3'
 import { Container } from 'semantic-ui-react'
+import CryptoJS from 'crypto-js';
+
 
 export default function newRetailer() {
 
@@ -14,7 +16,7 @@ export default function newRetailer() {
     const [validated, setValidated] = useState('Not Set');
     const [Authorized , setAuthorized] = useState(false);
 
-    useEffect(()=>{
+    useEffect(async ()=>{
         if(validated === 'Not Set') 
             getValidation();
     },[]);
@@ -54,6 +56,7 @@ export default function newRetailer() {
     const [retAdd, setRetAdd] = useState('')
     const [retMob, setRetMob] = useState('')
 
+
     const handleRetName = (event)=>{
         setRetName(event.target.value)
     }
@@ -64,9 +67,11 @@ export default function newRetailer() {
         setRetMob(event.target.value)
     }
 
+
+
     const onSubmit = async()=>{
         setLoading(true)
-        let accounts = await web3.eth.getAccounts()
+        let accounts = await web3.eth.getAccounts();
         const data = await fetch(`http://localhost:3000/api/registerRet?name=${retName}&address=${retAdd}&mobile=${retMob.toString()}&metamaskId=${accounts[0]}`)
         console.log(data.json)
         setLoading(false)

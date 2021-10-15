@@ -6,65 +6,92 @@ import styles from '../../../styles/Home.module.css';
 import logo from '../../../public/apple-icon-180x180.png';
 import web3 from '../../../ethereum/web3';
 import Manufacturer from '../../../ethereum/manufacturer';
-import { Button, Card,Segment , List, Container, Icon } from 'semantic-ui-react';
-import LayoutAdmin from '../../../components/AdminLayout/LayoutAdmin'
+import { Button, Card,Segment , List, Container, Icon,Input } from 'semantic-ui-react';
+import LayoutAdmin from '../../../components/AdminLayout/LayoutAdmin';
 
 
 
 export default function AddedProduct({productsList , manInfo}) {
+
+	useEffect (() => {
+        const script = document.createElement('script')
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+        script.async = true
+        script.id = 'razorpay-script'
+        document.head.appendChild(script)
+        return () => {
+            const script = document.getElementById('razorpay-script')
+            const rContainer = document.querySelector('.razorpay-container')
+            console.log('script2', rContainer)
+            rContainer && rContainer.remove()
+            script && script.remove()
+        };
+    }, []);
+	
+	const [loading,setLoading]=useState(false);
 	const router = useRouter();
+	const [RetMobile,setRetMobile]=useState('');
+	const [RetKey,setRetKey]=useState('');
+
+	const [isSuccess,setSuccess]=useState(false);
 	// console.log("router: "+JSON.stringify(router.query))
-	// console.log(productsList)
+	console.log(productsList)
 	// console.log(manInfo)
 	let i=router.query.AddedProduct;
-	// console.log("i: "+i);
 	const features=productsList[i][0].split(';');
 	var name=features.shift();
 	const amt=productsList[i][1];
-	// console.log(features)
 
-
-	//razorpay functions
-	const loadScript=(src)=>{
-        return new Promise((resolve) =>{
-            const script=document.createElement('script')
-            script.src=src
-
-            script.onload=()=>{
-                resolve(true)
-            }
-
-            script.omerror=()=>{
-                resolve(false)
-            }
-            document.body.appendChild(script)
-        })
-
-
-    }
+ 	const confirmPayment= async(val)=>{
+ 			 let accounts = await web3.eth.getAccounts();
+	        let curMan = Manufacturer(router.query.contractAdd);
+	        //console.log("customer== "+accounts[0]);
+	        setLoading(true);
+	        console.log("val"+val)
+ 			
+	        // console.log(router.query.product)
+	        // console.log(router.query.AddedProduct)
+	        // console.log(Retailer);
+	        // console.log(accounts[0].toString());
+	        try{
+	            await curMan.methods.updateProductSell(router.query.product,router.query.AddedProduct,val,accounts[0]).send({
+	            	from:accounts[0]
+	            });
+	            setLoading(false);
+	            window.location.href="/";
+	            
+	        } catch (err) {
+		            console.log(err);
+		            setLoading(false);
+		        }
+ 	}
 
 
     const displayRazorpay = async() =>{
-        const res= await loadScript('https://checkout.razorpay.com/v1/checkout.js');
-
-        if(!res)
-        {
-            alert('You are offline..');
-            return;
-        }
-
+        //const res= await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+        console.log("moblie== ",RetMobile);
+        console.log("key== ",RetKey);
         const options={
-            key:"rzp_test_av6t1hoxffSiUW",
+            key:RetKey,
             currency:"INR",
             amount:1*100,
             name:"bestBuy",
             image: "https://live-server-818.wati.io/data/logo/theblingbag.myshopify.com.png?24655",
 
 	        "handler": function(response){
-	        	alert("Payment Successful!!")
-	            alert("Payment id: " +response.razorpay_payment_id);
-			    alert("Order id: "+response.razorpay_order_id);
-			    alert("Signature: "+response.razorpay_signature);
+		         fetch(`http://localhost:3000/api/properties?mobile=${RetMobile}`)
+		        .then((response)=>{
+		                response.json().then((data)=>{
+		                //console.log("data.add=== "+JSON.stringify(data))
+		                //console.log("hret"+data[0].metamaskId);
+		                alert("Payment successful");
+			    		confirmPayment(data[0].metamaskId);
+		                //console.log("hret"+Retailer);
+
+		            })
+		        })
+		        
+
 	        },
 	        "prefill":{
 	            name:"bestBuy"
@@ -81,8 +108,14 @@ export default function AddedProduct({productsList , manInfo}) {
 	        alert(response.error.metadata.order_id);
 	        alert(response.error.metadata.payment_id);
 		});
+	  
+
 
 	}
+
+
+	
+
 	let items = []
 
 
@@ -93,8 +126,15 @@ export default function AddedProduct({productsList , manInfo}) {
 		})
 	}
 
+	const handleRetKey=(event)=>{
+		setRetKey(event.target.value);
+	}
+	const handleRetMobile=(event)=>{
+		setRetMobile(event.target.value);
+	}
+
     return (
-		<LayoutAdmin>
+
 
 			<Container >
 				<main className={styles.main} style = {{ marginLeft : '25%' , marginRight : '25%' ,paddingTop : '0px' }}>
@@ -111,13 +151,20 @@ export default function AddedProduct({productsList , manInfo}) {
 										<p>
 											Manufacturer Address :{ manInfo.companyAddress}
 										</p>
+										<p>
+											<b>Price : {productsList[i][1]} Rs</b>
+										</p>
 
 										<List animated verticalAlign='middle' items={items} />
 									</Card.Description>
 								</Card.Content>
+								<p>Retailer Mobile Number</p>
+							<Input  value={RetMobile} onChange={handleRetMobile}/><br/>
+								<p>Retailer Razorpay Key</p>
+							<Input type='Password' value={RetKey} onChange={handleRetKey}/>
 							<Card.Content extra>
 							<a>
-							<Button className={styles.payBtn} disabled={productsList[i][2]} onClick={() =>displayRazorpay()} primary>
+							<Button loading = {loading} className={styles.payBtn} disabled={productsList[i][2]} onClick={() =>displayRazorpay()} primary>
 								Pay
 							</Button>
 							</a>
@@ -125,15 +172,14 @@ export default function AddedProduct({productsList , manInfo}) {
 						</Card>
 				</main>
 			</Container>
-		</LayoutAdmin>
     )
 }
 
 AddedProduct.getInitialProps = async(ctx)=>{
-    console.log(ctx.query);
+    //console.log(ctx.query);
     let curMan = Manufacturer(ctx.query.contractAdd);
     let countProductsAddedInLaunch = await curMan.methods.countProductsAddedInLaunch(ctx.query.product).call();
-    console.log(countProductsAddedInLaunch)
+    //console.log(countProductsAddedInLaunch)
 
     let productsList = await Promise.all(
         Array(parseInt(countProductsAddedInLaunch)).fill().map((element , index)=>{
