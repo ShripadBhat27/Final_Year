@@ -5,7 +5,7 @@ import { Form , Button } from 'semantic-ui-react'
 import { useRouter } from 'next/router'
 import web3 from '../../ethereum/web3'
 import { Container } from 'semantic-ui-react'
-import CryptoJS from 'crypto-js';
+import Encryption from "encrypt-decrypt-library";
 
 
 export default function newRetailer() {
@@ -55,6 +55,7 @@ export default function newRetailer() {
     const [retName, setRetName] = useState('')
     const [retAdd, setRetAdd] = useState('')
     const [retMob, setRetMob] = useState('')
+    const [retRazor,setRetRazor] =useState('');
 
 
     const handleRetName = (event)=>{
@@ -66,13 +67,19 @@ export default function newRetailer() {
     const handleRetMob = (event)=>{
         setRetMob(event.target.value)
     }
+    const handleRetRazor=(event)=>{
+        console.log(retMob);
+        // const ciphertext = CryptoJS.AES.encrypt(event.target.value, retMob).toString();
+        // console.log(ciphertext);
+        setRetRazor(event.target.value);
+    }
 
 
 
     const onSubmit = async()=>{
         setLoading(true)
         let accounts = await web3.eth.getAccounts();
-        const data = await fetch(`http://localhost:3000/api/registerRet?name=${retName}&address=${retAdd}&mobile=${retMob.toString()}&metamaskId=${accounts[0]}`)
+        const data = await fetch(`http://localhost:3000/api/registerRet?name=${retName}&address=${retAdd}&mobile=${retMob.toString()}&metamaskId=${accounts[0]}&RazorpayId=${retRazor}`)
         console.log(data.json)
         setLoading(false)
         router.replace('/')
@@ -105,6 +112,11 @@ export default function newRetailer() {
                         <Form.Field>
                             <label>Enter Your Mobile Number</label>
                             <input value = {retMob} onChange = {handleRetMob} />
+                        </Form.Field>
+                        <Form.Field>
+                            <label>Enter Your Razorpay Key</label>
+                            <input type='password' value = {retRazor} onChange = {handleRetRazor} />
+                            <a href="https://dashboard.razorpay.com/signup">Create a new account on razorpay</a>
                         </Form.Field>
                         <Button  type='submit' primary loading = {loading}>Sign Up!</Button>
                     </Form>

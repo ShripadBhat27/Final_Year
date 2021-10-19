@@ -100,5 +100,9 @@ contract Admin{
         productlist[pr].retailer=ret;
         productlist[pr].customer=cust;
     }
+     function updateProductPrice(uint newprice,uint productNo,uint pr) restricted public{
+        Product[] storage productlist=listingProducts[productNo];
+        productlist[pr].price=newprice;
+     }
  }
   

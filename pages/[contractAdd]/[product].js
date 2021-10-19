@@ -1,7 +1,7 @@
 import React , {useState , useEffect} from 'react'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout';
-import { Button  ,Card, Grid, Image , Container} from 'semantic-ui-react';
+import { Button  ,Icon,Card, Grid, Image , Container} from 'semantic-ui-react';
 import Manufacturer from '../../ethereum/manufacturer';
 import { route } from 'next/dist/server/router';
 import Admin from '../../ethereum/admin'
@@ -35,6 +35,12 @@ export default function product({productsList}) {
     let items = [];
     console.log(router.query)
 
+    const handleChangePrice=(e)=>{
+    	console.log(router.query.contractAdd);
+    	console.log("e== ",e);
+        router.replace(`/${router.query.contractAdd}/${router.query.product}/${e}/edit_price`)
+    }
+
     
     for(let i=0;i<productsList.length;i++){
         let url=`http://localhost:3000/${router.query.contractAdd}/${router.query.product}/${i}`
@@ -43,7 +49,11 @@ export default function product({productsList}) {
         let features=productsList[i].feature.split(';');
         items.push({
             header : features[0],
-            meta : <div>Price: {productsList[i].price} Rs</div> ,
+            meta :<Button icon labelPosition='right' onClick={()=>handleChangePrice(i)}>
+                      Price: {productsList[i].price} Rs
+                      <Icon name='edit' />
+                      
+                </Button> ,
             description :   <div>
                                 <strong>Retailer : </strong> {productsList[i].retailer}<br/>
                                 <strong>Customer : </strong> {productsList[i].customer}<br/>

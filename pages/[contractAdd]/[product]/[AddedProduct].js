@@ -8,6 +8,7 @@ import web3 from '../../../ethereum/web3';
 import Manufacturer from '../../../ethereum/manufacturer';
 import { Button, Card,Segment , List, Container, Icon,Input } from 'semantic-ui-react';
 import LayoutAdmin from '../../../components/AdminLayout/LayoutAdmin';
+const CryptoJS=require("crypto-js");
 
 
 
@@ -31,7 +32,7 @@ export default function AddedProduct({productsList , manInfo}) {
 	const [loading,setLoading]=useState(false);
 	const router = useRouter();
 	const [RetMobile,setRetMobile]=useState('');
-	const [RetKey,setRetKey]=useState('');
+
 
 	const [isSuccess,setSuccess]=useState(false);
 	// console.log("router: "+JSON.stringify(router.query))
@@ -66,31 +67,41 @@ export default function AddedProduct({productsList , manInfo}) {
 		        }
  	}
 
+ 	const ApiForRazorpay =async ()=>{
+ 		await fetch(`http://localhost:3000/api/properties?mobile=${RetMobile}`)
+		        .then((response)=>{
+		                response.json().then((data)=>{
+		                //console.log("data.add=== "+JSON.stringify(data))
+		                // console.log("hret"+RetMobile);
+		                // console.log("key== ", CryptoJS.AES.decrypt(data[0].RazorpayId,RetMobile).toString(CryptoJS.enc.Utf8));
+		                // //const crypted = CryptoJS.enc.Base64.parse(data[0].RazorpayId);
+		                // const cryptkey = CryptoJS.enc.Utf8.parse(RetMobile);
+		                // const bytes=CryptoJS.AES.decrypt(data[0].RazorpayId,cryptkey)
+				    		displayRazorpay(data[0].metamaskId, data[0].RazorpayId);
+		                //console.log("hret"+Retailer);
 
-    const displayRazorpay = async() =>{
-        //const res= await loadScript('https://checkout.razorpay.com/v1/checkout.js');
+		            })
+		        })
+ 	}
+
+
+    const displayRazorpay = async(cust_meta,key) =>{
+
+        
+		 console.log(cust_meta);
+		 
         console.log("moblie== ",RetMobile);
-        console.log("key== ",RetKey);
+        console.log("key== ",key);
         const options={
-            key:RetKey,
+            key:key,
             currency:"INR",
             amount:1*100,
             name:"bestBuy",
             image: "https://live-server-818.wati.io/data/logo/theblingbag.myshopify.com.png?24655",
 
 	        "handler": function(response){
-		         fetch(`http://localhost:3000/api/properties?mobile=${RetMobile}`)
-		        .then((response)=>{
-		                response.json().then((data)=>{
-		                //console.log("data.add=== "+JSON.stringify(data))
-		                //console.log("hret"+data[0].metamaskId);
-		                alert("Payment successful");
-			    		confirmPayment(data[0].metamaskId);
-		                //console.log("hret"+Retailer);
-
-		            })
-		        })
-		        
+		         alert("pament successfull");
+		        confirmPayment(cust_meta);
 
 	        },
 	        "prefill":{
@@ -126,18 +137,21 @@ export default function AddedProduct({productsList , manInfo}) {
 		})
 	}
 
-	const handleRetKey=(event)=>{
-		setRetKey(event.target.value);
-	}
+
 	const handleRetMobile=(event)=>{
 		setRetMobile(event.target.value);
+	}
+	const getHome=()=>{
+		router.replace(`/`);
 	}
 
     return (
 
 
 			<Container >
+			<Button style = {{ marginTop : '2%'}} onClick={()=>getHome()}  primary floated='right'>Home</Button>
 				<main className={styles.main} style = {{ marginLeft : '25%' , marginRight : '25%' ,paddingTop : '0px' }}>
+
 					<img height = '150px' width = '150px' style = {{marginTop : '15px'}} src = {logo.src} />
 						<Card style = {{ "width" : "100%"}} >
 							<Card.Content style = {{"wordWrap" : "break-word" }}>
@@ -158,13 +172,11 @@ export default function AddedProduct({productsList , manInfo}) {
 										<List animated verticalAlign='middle' items={items} />
 									</Card.Description>
 								</Card.Content>
-								<p>Retailer Mobile Number</p>
-							<Input  value={RetMobile} onChange={handleRetMobile}/><br/>
-								<p>Retailer Razorpay Key</p>
-							<Input type='Password' value={RetKey} onChange={handleRetKey}/>
+								<p><b>Retailer Mobile Number:</b></p>
+							<Input style={{paddingLeft:'4%', paddingRight:'4%'}} value={RetMobile} onChange={handleRetMobile}/><br/>
 							<Card.Content extra>
 							<a>
-							<Button loading = {loading} className={styles.payBtn} disabled={productsList[i][2]} onClick={() =>displayRazorpay()} primary>
+							<Button loading = {loading} className={styles.payBtn} disabled={productsList[i][2]} onClick={() =>ApiForRazorpay()} primary>
 								Pay
 							</Button>
 							</a>

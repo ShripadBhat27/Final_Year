@@ -54,13 +54,23 @@
     
 // }
 
-const CryptoJS=require("crypto-js");
+//const CryptoJS=require("crypto-js");
+const Encryption=require("encrypt-decrypt-library");
 
-// Encrypt
-var ciphertext = CryptoJS.AES.encrypt('rzp_test_av6t1hoxffSiUW', '7798003210').toString();
+const config = {
+   algorithm: process.env.ALGORITHM,
+   encryptionKey: process.env.ENCRYPTION_KEY,
+   salt: process.env.SALT,
+} 
+const encryption = new Encryption(config);
 
-console.log(ciphertext);
-var bytes  = CryptoJS.AES.decrypt(ciphertext,'7798003210');
-var originalText = bytes.toString(CryptoJS.enc.Utf8);
+// Encrypted as a string
+console.log(encryption.encrypt('Hello world'));
 
-console.log(originalText);
+
+
+// bcrypt.genSalt(10, function(err, salt) {
+//     bcrypt.hash("rzp_test_av6t1hoxffSiUW", salt, function(err, hash) {
+//         console.log(hash);
+//     });
+// });
