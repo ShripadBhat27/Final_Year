@@ -41,6 +41,10 @@ export default function product({productsList}) {
         router.replace(`/${router.query.contractAdd}/${router.query.product}/${e}/edit_price`)
     }
 
+    const handleOnChange=(e)=>{
+        router.push(`/${router.query.contractAdd}/${router.query.product}/${e}`)
+    }
+
     
     for(let i=0;i<productsList.length;i++){
         let url=`http://localhost:3000/${router.query.contractAdd}/${router.query.product}/${i}`
@@ -48,6 +52,7 @@ export default function product({productsList}) {
 
         let features=productsList[i].feature.split(';');
         items.push({
+            
             header : features[0],
             meta :<Button icon labelPosition='right' onClick={()=>handleChangePrice(i)}>
                       Price: {productsList[i].price} Rs
@@ -70,10 +75,10 @@ export default function product({productsList}) {
                                         {productsList[i].sold ? 'Sold' :  'Not Sold Yet'}
                                     </Button>
                                 </div>
+                                <Button icon floated='right' onClick={()=>handleOnChange(i)}>
+                                    <Icon name='arrow circle right' />
+                                </Button>
                             </div>,
-            onClick : ()=>{
-                router.push(`/${router.query.contractAdd}/${router.query.product}/${i}`)
-            },
             style : { overflowWrap : 'break-word' }
         });
     }
