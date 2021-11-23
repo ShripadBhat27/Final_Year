@@ -58,6 +58,7 @@ export default function AddedProduct({productsList , manInfo}) {
 	            await curMan.methods.updateProductSell(router.query.product,router.query.AddedProduct,val,accounts[0]).send({
 	            	from:accounts[0]
 	            });
+	            const data = await fetch(`http://localhost:3000/api/Ret_Trans?metamakId=${val}&customer_meta=${accounts[0]}&product_name=${name}&product_price=${productsList[i][1]}&manufacturer=${manInfo.companyAddress}`)
 	            setLoading(false);
 	            window.location.href="/";
 	            

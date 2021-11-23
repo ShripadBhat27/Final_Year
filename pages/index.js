@@ -72,7 +72,7 @@
 // }
 
 import { useRouter } from 'next/router';
-import React , { useState }from 'react'
+import React , { useState,useEffect }from 'react'
 import { Button, Card,Segment } from 'semantic-ui-react';
 import Layout from '../components/Layout';
 import Admin from '../ethereum/admin'
@@ -121,16 +121,24 @@ export default function index({manufacturers , retailersList}) {
     let items = [];
     const [selected, setSelected] = useState('');
     const [Mess, setMess] = useState(null);
+     useEffect( ()=>{
+        window.addEventListener('load', function () {
+          if (typeof web3 !== 'undefined') {
+            console.log('web3 is enabled')
+            if (web3.currentProvider.isMetaMask === true) {
+              console.log('MetaMask is active')
+            } else {
+              alert("MetaMask is not available");
+            }
+          } else {
+            alert("MetaMask is not Found Please Install");
+          }
+        });
+    },[]);
 
-    // console.log(Note)
 
     const handleAdminClick = async()=>{
 
-
-        // const { db } = await connectToDatabase()
-        // console.log(accounts[0])
-        // const data = await db.collection('notes').find({title : 'This is tile'}).toArray();
-        // const retailersList = JSON.parse(JSON.stringify(data))
 
 
 
